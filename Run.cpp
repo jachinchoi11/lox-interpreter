@@ -1,10 +1,9 @@
 
 #include "Run.h"
 #include <iostream>
+#include "Error.h"
+#include "Scanner.h"
 
-void Run::runFile(std::string file_name) {
-    std::cout << "Need to figure this out" << std::endl;
-}
 
 void Run::runPrompt() {
     std::cout << "Enter line by line" << std::endl;
@@ -12,9 +11,11 @@ void Run::runPrompt() {
     std::getline(std::cin, line);
     if (!line.empty()) {
         run(line);
+        Error::hasError = false;
     }
 }
-void Run::run(std::string line) {
-// we have to create a token class?
-    // maybe we can wrap the line in a string stream and then put it in tokens, but we need to first create a token clas
+void Run::run(std::string& line) {
+    Scanner scanner(line);
+
+
 }
