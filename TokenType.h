@@ -20,7 +20,4 @@ enum TokenType {
 
 };
 std::string tokenTypeToString(TokenType t);
-
-
-
 #endif //TOKENTYPE_H

@@ -3,7 +3,6 @@
 #include <string>
 
 std::string tokenTypeToString(TokenType type) {
-
     switch (type) {
         case TokenType::LEFT_PAREN:
             return "LEFT_PAREN";
@@ -82,6 +81,5 @@ std::string tokenTypeToString(TokenType type) {
         case TokenType::END_OF:
             return "END OF FILE";
     }
-
     return "invalid";
 }

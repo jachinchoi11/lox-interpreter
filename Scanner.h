@@ -5,15 +5,15 @@
 #include <string>
 #include <vector>
 #include "Token.h"
-#include "TokenType.h"
 
 
 class Scanner {
     std::string source;
-    int start = 0;
-    int current = 0;
-    int line = 1;
+    unsigned int start = 0;
+    unsigned int current = 0;
+    unsigned int line = 1;
     char current_char;
+
     void advance();
     bool isAtEnd();
     void scanToken();

@@ -8,6 +8,6 @@ class Error {
     static void error(int line, std::string message);
     static void report(int line, std::string location, std::string message);
 public:
-    bool hasError = false;
+    static bool hasError;
 };
 #endif //ERROR_H

@@ -16,6 +16,4 @@ void Run::runPrompt() {
 }
 void Run::run(std::string& line) {
     Scanner scanner(line);
-
-
 }
