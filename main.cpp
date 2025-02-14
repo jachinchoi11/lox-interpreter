@@ -10,11 +10,13 @@ int main(int argc, char *argv[]) {
         std::cout << "Incorrect number of arguments" << std::endl;
         exit(64);
     }
+    else if (argc == 1) {
+        Run::run_file(argv[0]);
+    }
     else {
         Run::runPrompt();
         Error::hasError = false;
     }
-    Scanner scanner("ddwaui");
-    scanner.scanTokens();
     return 0;
+
 }

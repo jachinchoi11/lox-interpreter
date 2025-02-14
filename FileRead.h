@@ -7,11 +7,12 @@
 #include <fstream>
 
 class FileRead {
-    FileRead(std::string file_name);
     ~FileRead();
 public:
+    FileRead(std::string file_name);
     std::ifstream file_reader;
     std::string file_name;
-    void read_file(const std::string file_name);
+    void read_file(std::string file_name);
+    std::string scan_file();
 };
 #endif //FILEREAD_H
