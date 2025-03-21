@@ -8,13 +8,12 @@
 struct Token {
     TokenType type;
     std::string lexeme;
-    std::any literal;
     int line;
+    std::any literal;
 
-    //Token(TokenType type, std::string& lexeme, std::any literal, int line);
-    std::string toString(TokenType tokenType, std::any literal, std::string lexeme);
+    std::string toString();
 
-    Token(TokenType type, std::string lexeme, unsigned int line);
+    Token(TokenType type, std::string lexeme, unsigned int line, std::any literal);
 
 };
 #endif //TOKEN_H

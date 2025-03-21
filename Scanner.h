@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include "Token.h"
-
+#include <map>
 
 class Scanner {
     std::string source;
@@ -13,7 +13,8 @@ class Scanner {
     unsigned int current{0};
     unsigned int line{1};
     char current_char;
-
+    static std::map<std::string, TokenType> possible_keywords;
+    void scanIdentifier();
     void advance();
     bool isAtEnd();
     void scanToken();
@@ -24,6 +25,7 @@ class Scanner {
     void scanString();
     char peek() const;
     void scanNumber();
+    void addLiteral(TokenType type, std::any value);
 
 public:
     Scanner(const std::string& source);

@@ -16,7 +16,7 @@ enum TokenType {
 
   // keywords
   AND, CLASS, ELSE, FOR, FUN, IF, NIL, OR,
-  PRINT, RETURN, SUPER, THIS, TRUE, VAR, WHILE, END_OF
+  PRINT, RETURN, SUPER, THIS, TRUE, FALSE, VAR, WHILE, END_OF
 
 };
 std::string tokenTypeToString(TokenType t);

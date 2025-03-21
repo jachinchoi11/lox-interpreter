@@ -74,6 +74,8 @@ std::string tokenTypeToString(TokenType type) {
             return "THIS";
         case TokenType::TRUE:
             return "TRUE";
+        case TokenType::FALSE:
+            return "TRUE";
         case TokenType::VAR:
             return "VAR";
         case TokenType::WHILE:

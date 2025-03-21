@@ -7,9 +7,9 @@
 #include <fstream>
 
 class FileRead {
-    ~FileRead();
 public:
     FileRead(std::string file_name);
+    ~FileRead();
     std::ifstream file_reader;
     std::string file_name;
     void read_file(std::string file_name);

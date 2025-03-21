@@ -6,7 +6,7 @@
 #include "FileRead.h"
 
 void Run::runPrompt() {
-    std::cout << "Enter line by line" << std::endl;
+    std::cout << "Enter line" << std::endl;
     std::string line;
     std::getline(std::cin, line);
     if (!line.empty()) {
@@ -19,7 +19,7 @@ void Run::run(std::string &line) {
     Scanner scanner(line);
     std::vector<Token> tokens = scanner.scanTokens();
     for (Token token: tokens) {
-        std::cout << "hello" << std::endl;
+        std::cout << token.toString() << std::endl;
     }
 }
 void Run::run_file(std::string source) {
