@@ -1,16 +1,18 @@
 #include "Interpreter.h"
 #include <iostream>
 
-std::any Interpreter::interpret(const Expr& expression) {
-    return expression.accept(*this);
+void Interpreter::interpret(const std::vector<std::unique_ptr<Stmt>>& statements) {
+    for (const auto& stmt : statements) {
+        stmt->accept(*this);
+    }
 }
-
 std::any Interpreter::visitLiteralExpr(const Literal& expr) {
     return expr.value;
 }
 std::any Interpreter::visitGroupingExpr(const Grouping& expr) {
     return expr.expression->accept(*this);
 }
+
 std::any Interpreter::visitUnaryExpr(const Unary& expr) {
     std::any right = expr.right->accept(*this);
 
@@ -27,12 +29,12 @@ std::any Interpreter::visitUnaryExpr(const Unary& expr) {
             return !std::any_cast<bool>(right);
         }
     }
+    return 0;
 }
 
 std::any Interpreter::visitBinaryExpr(const Binary& expr) {
     // only have support for +, - , *, /
     // add suppport for ==, !=, >=, <= , > , <
-
 
     std::any left = expr.left->accept(*this);
     std::any right = expr.right->accept(*this);
@@ -47,8 +49,13 @@ std::any Interpreter::visitBinaryExpr(const Binary& expr) {
         if (expr.op.type == TokenType::STAR) return leftVal * rightVal;
         if (expr.op.type == TokenType::SLASH) {
             if (rightVal == 0) throw std::runtime_error("Division by zero.");
-            return leftVal / rightVal;
         }
+        if (expr.op.type == TokenType::GREATER) return leftVal > rightVal;
+        if (expr.op.type == TokenType::LESS) return leftVal < rightVal;
+        if (expr.op.type == TokenType::EQUAL) return leftVal == rightVal;
+        if (expr.op.type == TokenType::GREATER_EQUAL) return leftVal >= rightVal;
+        if (expr.op.type == TokenType::LESS_EQUAL) return leftVal <= rightVal;
+
     }
 
     if (left.type() == typeid(int) && right.type() == typeid(int)) {
@@ -60,7 +67,27 @@ std::any Interpreter::visitBinaryExpr(const Binary& expr) {
         if (expr.op.type == TokenType::STAR) return leftVal * rightVal;
         if (expr.op.type == TokenType::SLASH) {
             if (rightVal == 0) throw std::runtime_error("Division by zero.");
-            return static_cast<double>(leftVal) / rightVal;
         }
+        if (expr.op.type == TokenType::EQUAL) return leftVal == rightVal;
+        if (expr.op.type == TokenType::GREATER_EQUAL) return leftVal >= rightVal;
+        if (expr.op.type == TokenType::LESS_EQUAL) return leftVal <= rightVal;
     }
+    return 0;
+}
+
+std::any Interpreter::visitPrintStmt(const PrintStmt& stmt) {
+    // extract the value from the expression
+    std::any value = stmt.expression->accept(*this);
+    // Check if the value is of type string
+    if (value.type() == typeid(std::string)) {
+        // print the string value
+        std::cout << std::any_cast<std::string>(value) << std::endl;
+    } else {
+        throw std::runtime_error("Expected a string value for print statement.");
+    }
+    return value;  // return the value after printing it
+}
+
+std::any Interpreter::visitExpressionStmt(const ExpressionStmt& stmt) {
+    return stmt.expression->accept(*this);
 }

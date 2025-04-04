@@ -4,21 +4,7 @@
 #include <memory>
 #include <vector>
 #include "Token.h"
-
-struct Binary;
-struct Unary;
-struct Grouping;
-struct Literal;
-
-struct ExprVisitor {
-    virtual std::any visitBinaryExpr(const Binary& expr) = 0;
-    virtual std::any visitGroupingExpr(const Grouping& expr) = 0;
-    virtual std::any visitLiteralExpr(const Literal& expr) = 0;
-    virtual std::any visitUnaryExpr(const Unary& expr) = 0;
-    virtual ~ExprVisitor() = default;
-};
-
-// have derived visitors for each function (interpret, resolve, analyze)
+#include "ExprVisitor.h"
 
 struct Expr {
     virtual std::any accept(ExprVisitor& visitor) const = 0;

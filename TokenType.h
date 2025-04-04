@@ -18,6 +18,7 @@ enum TokenType {
   AND, CLASS, ELSE, FOR, FUN, IF, NIL, OR,
   PRINT, RETURN, SUPER, THIS, TRUE, FALSE, VAR, WHILE, END_OF
 
+
 };
 std::string tokenTypeToString(TokenType t);
 #endif //TOKENTYPE_H

@@ -1,10 +1,41 @@
 #include "Parser.h"
 #include <stdexcept>
+#include <iostream>
 
-Parser::Parser(const std::vector<Token>& tokens) : tokens(tokens) {}
+Parser::Parser(const std::vector<Token>& tokens) : tokens(tokens), current(0) {}
 
-std::unique_ptr<Expr> Parser::parse() {
-    return expression();
+std::vector<std::unique_ptr<Stmt>> Parser::parse() {
+    std::vector<std::unique_ptr<Stmt>> statements;
+    // Loop to parse each statement.
+    while (!isAtEnd()) {
+        std::cout << "Parsing token: " << peek().lexeme << " (" << static_cast<int>(peek().type) << ")" << std::endl;
+        statements.push_back(statement());
+    }
+    // return the vector of statements directly.
+    return statements;
+}
+
+std::unique_ptr<Stmt> Parser::statement() {
+    if (match({PRINT})) {
+        return printStatement();
+    }
+
+    // Parse general expression statements
+    return expressionStatement();
+}
+
+std::unique_ptr<Stmt> Parser::printStatement() {
+    // Ensure the next token is an expression to print
+    auto expr = expression();
+    // Ensure the statement ends with a semicolon
+    consume(SEMICOLON);
+    return std::make_unique<PrintStmt>(std::move(expr));
+}
+
+std::unique_ptr<Stmt> Parser::expressionStatement() {
+    auto expr = expression();
+    consume(SEMICOLON);
+    return std::make_unique<ExpressionStmt>(std::move(expr));
 }
 
 std::unique_ptr<Expr> Parser::expression() {
@@ -63,11 +94,14 @@ std::unique_ptr<Expr> Parser::unary() {
 }
 
 std::unique_ptr<Expr> Parser::primary() {
-    // has highest prioirty
+    // has highest priority
     if (match({TokenType::FALSE})) return std::make_unique<Literal>(false);
     if (match({TokenType::TRUE})) return std::make_unique<Literal>(true);
     if (match({TokenType::NUMBER})) {
         return std::make_unique<Literal>(previous().literal);
+    }
+    if (match({TokenType::STRING})) {  // Handling for strings
+        return std::make_unique<Literal>(previous().literal);  // Assuming `previous().literal` stores the string value
     }
 
     if (match({TokenType::LEFT_PAREN})) {
@@ -77,7 +111,7 @@ std::unique_ptr<Expr> Parser::primary() {
         }
         return std::make_unique<Grouping>(std::move(expr));
     }
-    return 0;
+    return nullptr;
 }
 
 bool Parser::match(const std::vector<TokenType>& types) {
@@ -99,7 +133,7 @@ bool Parser::check(TokenType type) {
 
 Token Parser::advance() {
     if (!isAtEnd()) {
-        current+= 1;
+        current += 1;
     }
     return previous();
 }
@@ -114,4 +148,14 @@ Token Parser::peek() {
 
 Token Parser::previous() {
     return tokens[current - 1];
+}
+
+void Parser::consume(TokenType type) {
+    if (check(type)) {
+        advance();
+        return;
+    } else {
+        std::cerr << "Expected: " << static_cast<int>(type) << ", but got: " << static_cast<int>(peek().type) << " (" << peek().lexeme << ")" << std::endl;
+        throw std::runtime_error("content is not as expected");
+    }
 }

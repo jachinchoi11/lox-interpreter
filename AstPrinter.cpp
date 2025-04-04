@@ -54,3 +54,11 @@ std::string AstPrinter::parenthesize(const std::string& name, const std::vector<
     result += ")";
     return result;
 }
+
+std::any AstPrinter::visitExpressionStmt(const ExpressionStmt& stmt) {
+    return parenthesize("expression", {stmt.expression.get()});
+}
+
+std::any AstPrinter::visitPrintStmt(const PrintStmt& stmt) {
+    return parenthesize("print", {stmt.expression.get()});
+}
