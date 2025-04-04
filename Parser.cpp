@@ -111,10 +111,12 @@ std::unique_ptr<Expr> Parser::primary() {
     if (match({TokenType::NUMBER})) {
         return std::make_unique<Literal>(previous().literal);
     }
-    if (match({TokenType::STRING})) {  // Handling for strings
-        return std::make_unique<Literal>(previous().literal);  // Assuming `previous().literal` stores the string value
+    if (match({TokenType::STRING})) {
+        return std::make_unique<Literal>(previous().literal);
     }
-
+    if (match({TokenType::IDENTIFIER})) {
+        return std::make_unique<Variable>(previous());
+    }
     if (match({TokenType::LEFT_PAREN})) {
         std::unique_ptr<Expr> expr = expression();
         if (!match({TokenType::RIGHT_PAREN})) {

@@ -22,11 +22,9 @@ int main(int argc, char *argv[]) {
         if (!std::getline(std::cin, source) || source == "exit") {
             break;
         }
-
         if (source.empty()) {
             continue;
         }
-
         Scanner scanner(source);
         std::vector<Token> tokens = scanner.scanTokens();
 
