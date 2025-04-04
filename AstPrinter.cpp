@@ -62,3 +62,15 @@ std::any AstPrinter::visitExpressionStmt(const ExpressionStmt& stmt) {
 std::any AstPrinter::visitPrintStmt(const PrintStmt& stmt) {
     return parenthesize("print", {stmt.expression.get()});
 }
+
+std::any AstPrinter::visitVarStmt(const VarStmt& stmt) {
+    if (stmt.current_value) {
+        return parenthesize("var " + stmt.var_name.lexeme, { stmt.current_value.get() });
+    } else {
+        return "(var " + stmt.var_name.lexeme + ")";
+    }
+}
+
+std::any AstPrinter::visitVariableExpr(const Variable& expr) {
+    return expr.name.lexeme;
+}

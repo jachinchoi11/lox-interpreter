@@ -6,36 +6,47 @@ Parser::Parser(const std::vector<Token>& tokens) : tokens(tokens), current(0) {}
 
 std::vector<std::unique_ptr<Stmt>> Parser::parse() {
     std::vector<std::unique_ptr<Stmt>> statements;
-    // Loop to parse each statement.
     while (!isAtEnd()) {
         std::cout << "Parsing token: " << peek().lexeme << " (" << static_cast<int>(peek().type) << ")" << std::endl;
-        statements.push_back(statement());
+        statements.push_back(declaration()); // declaration takes precedence
     }
-    // return the vector of statements directly.
     return statements;
 }
 
+std::unique_ptr<Stmt> Parser::declaration() {
+    if (match({VAR})) {
+        return varDeclaration();
+    }
+    return statement();
+}
 std::unique_ptr<Stmt> Parser::statement() {
+    // Parse print expresssions
     if (match({PRINT})) {
         return printStatement();
     }
-
     // Parse general expression statements
     return expressionStatement();
 }
 
 std::unique_ptr<Stmt> Parser::printStatement() {
-    // Ensure the next token is an expression to print
     auto expr = expression();
-    // Ensure the statement ends with a semicolon
-    consume(SEMICOLON);
+    consume(SEMICOLON, "semicolon not there");
     return std::make_unique<PrintStmt>(std::move(expr));
 }
 
 std::unique_ptr<Stmt> Parser::expressionStatement() {
     auto expr = expression();
-    consume(SEMICOLON);
+    consume(SEMICOLON, "semicolon not there");
     return std::make_unique<ExpressionStmt>(std::move(expr));
+}
+
+std::unique_ptr<Stmt> Parser::varDeclaration() {
+    Token var_name = consume(IDENTIFIER, "identifier not there");
+    consume(EQUAL, "equal not there ");
+    auto expr = expression();
+    consume(SEMICOLON, "semicolon not there");
+    return std::make_unique<VarStmt>(var_name, std::move(expr));
+
 }
 
 std::unique_ptr<Expr> Parser::expression() {
@@ -150,12 +161,10 @@ Token Parser::previous() {
     return tokens[current - 1];
 }
 
-void Parser::consume(TokenType type) {
+Token Parser::consume(TokenType type, std::string error) {
     if (check(type)) {
-        advance();
-        return;
+        return advance();
     } else {
-        std::cerr << "Expected: " << static_cast<int>(type) << ", but got: " << static_cast<int>(peek().type) << " (" << peek().lexeme << ")" << std::endl;
-        throw std::runtime_error("content is not as expected");
+        throw std::runtime_error(error);
     }
 }

@@ -10,7 +10,6 @@ struct Token {
     std::string lexeme;
     int line;
     std::any literal;
-
     std::string toString();
 
     Token(TokenType type, std::string lexeme, unsigned int line, std::any literal);

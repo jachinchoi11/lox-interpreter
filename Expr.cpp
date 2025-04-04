@@ -30,3 +30,9 @@ Unary::Unary(Token op, std::unique_ptr<Expr> right)
 std::any Unary::accept(ExprVisitor& visitor) const {
     return visitor.visitUnaryExpr(*this);
 }
+
+Variable::Variable(Token name): name(std::move(name)) {}
+
+std::any Variable::accept(ExprVisitor& visitor) const {
+    return visitor.visitVariableExpr(*this);
+}

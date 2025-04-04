@@ -75,6 +75,25 @@ std::any Interpreter::visitBinaryExpr(const Binary& expr) {
     return 0;
 }
 
+std::any Interpreter::visitVariableExpr(const Variable &expr) {
+    std::string key = expr.name.lexeme;
+    std::any value = environment.get(key);
+    if (value.type() == typeid(int)) {
+        return std::any_cast<int>(value);
+    }
+    if (value.type() == typeid(bool)) {
+        return std::any_cast<bool>(value);
+    }
+    if (value.type() == typeid(double)) {
+        return std::any_cast<double>(value);
+    }
+    if (value.type() == typeid(std::string)) {
+        return std::any_cast<std::string>(value);
+    }
+    throw std::runtime_error("Invalid variable type");
+}
+
+
 std::any Interpreter::visitPrintStmt(const PrintStmt& stmt) {
     // extract the value from the expression
     std::any value = stmt.expression->accept(*this);
@@ -82,7 +101,15 @@ std::any Interpreter::visitPrintStmt(const PrintStmt& stmt) {
     if (value.type() == typeid(std::string)) {
         // print the string value
         std::cout << std::any_cast<std::string>(value) << std::endl;
-    } else {
+    } else if (value.type() == typeid(bool)) {
+        std::cout << std::any_cast<bool>(value) << std::endl;
+    } else if (value.type() == typeid(int)) {
+        std::cout << std::any_cast<int>(value) << std::endl;
+    }
+    else if (value.type() == typeid(double)) {
+        std::cout << std::any_cast<double>(value) << std::endl;
+    }
+    else {
         throw std::runtime_error("Expected a string value for print statement.");
     }
     return value;  // return the value after printing it
@@ -90,4 +117,14 @@ std::any Interpreter::visitPrintStmt(const PrintStmt& stmt) {
 
 std::any Interpreter::visitExpressionStmt(const ExpressionStmt& stmt) {
     return stmt.expression->accept(*this);
+}
+
+std::any Interpreter::visitVarStmt(const VarStmt& stmt) {
+    std::any value;
+    if (stmt.current_value != nullptr) {
+        value = stmt.current_value->accept(*this);
+    }
+    // Directly store value without casting to std::string
+    environment.define(stmt.var_name.lexeme, value);
+    return value;
 }

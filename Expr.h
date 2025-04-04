@@ -40,3 +40,9 @@ struct Unary : public Expr {
     const Token op;
     const std::unique_ptr<Expr> right;
 };
+
+struct Variable : public Expr {
+    Variable(Token name);
+    std::any accept(ExprVisitor& visitor) const override;
+    Token name;
+};

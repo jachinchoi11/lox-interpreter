@@ -22,3 +22,10 @@ struct PrintStmt : public Stmt {
     std::any accept(StmtVisitor& visitor) const override;
     const std::unique_ptr<Expr> expression;
 };
+
+struct VarStmt: public Stmt {
+    VarStmt(Token varName, std::unique_ptr<Expr> current_value);
+    std::any accept(StmtVisitor& visitor) const override;
+    Token var_name;
+    std::unique_ptr<Expr> current_value;
+};

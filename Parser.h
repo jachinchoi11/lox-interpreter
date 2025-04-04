@@ -16,7 +16,7 @@ private:
     const std::vector<Token>& tokens;
     int current = 0;
 
-    void consume(TokenType type);
+    Token consume(TokenType type, std::string error);
     bool match(const std::vector<TokenType>& types);
     bool check(TokenType type);
     Token advance();
@@ -34,6 +34,8 @@ private:
     std::unique_ptr<Expr> factor();
     std::unique_ptr<Expr> unary();
     std::unique_ptr<Expr> primary();
+    std::unique_ptr<Stmt> varDeclaration();
+    std::unique_ptr<Stmt> declaration();
 
 };
 #endif //PARSER_H
